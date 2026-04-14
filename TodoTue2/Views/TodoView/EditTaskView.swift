@@ -10,7 +10,8 @@ import SwiftUI
 struct EditTaskView: View {
     
     var task: TodoTask
-    @Binding var tasks: [TodoTask]
+    
+    @ObservedObject var todoTaskViewModel: TodoTaskViewModel
     
     @State private var title: String = ""
     @State private var description: String = ""
@@ -65,13 +66,8 @@ struct EditTaskView: View {
     }
     
     private func updateTask() {
-        if let index = tasks.firstIndex(where: { iTask in
-            iTask.id == task.id
-        }) {
-            tasks[index].title = title
-            tasks[index].description = description
-            tasks[index].priority = priority
-            
-        }
+        let updatedTask = TodoTask(id: task.id, title: title, description: description, isCompleted: task.isCompleted, priority: priority)
+        
+        todoTaskViewModel.updateTask(id: task.id, updatedTask: updatedTask)
     }
 }

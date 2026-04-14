@@ -9,41 +9,21 @@ import SwiftUI
 
 struct TodoView: View {
     
+    @StateObject private var todoTaskViewModel = TodoTaskViewModel()
+    
     @State private var tasks: [TodoTask] = [
-        TodoTask(
-            title: "Organise workspace",
-            description: "Clean desk and arrange files for better focus",
-            isCompleted: true,
-            priority: .low,
-           
-        ),
-        TodoTask(
-            title: "Prepare presentation slides",
-            description: "Finalize content and visuals for tomorrow's meeting",
-            priority: .medium
-        ),
-        TodoTask(
-            title: "Submit assignment",
-            description: "Complete and upload before the deadline",
-            isCompleted: true,
-            priority: .high
-        ),
-        TodoTask(
-            title: "Read a few pages",
-            description: "Spend 15 minutes reading a book before bed",
-            priority: .low
-        )
+        
     ]
     
     var body: some View {
 
         NavigationStack {
             List {
-                ForEach(tasks) { task in
+                ForEach(todoTaskViewModel.tasks) { task in
                     TaskItemView(task: task, tasks: $tasks)
                         .swipeActions(edge: .trailing) {
                             NavigationLink {
-                                EditTaskView(task: task, tasks: $tasks)
+                                EditTaskView(task: task, todoTaskViewModel: todoTaskViewModel)
                             } label: {
                                 Label("Edit", systemImage: "pencil")
                             }
@@ -60,7 +40,7 @@ struct TodoView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     NavigationLink {
-                        NewTaskView(tasks: $tasks)
+                        NewTaskView(todoTaskViewModel: todoTaskViewModel)
                     } label: {
                         Label("Add New Task", systemImage: "plus")
                     }

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct NewTaskView: View {
     
-    @Binding var tasks: [TodoTask]
+    @ObservedObject var todoTaskViewModel: TodoTaskViewModel
     
     @State private var title: String = ""
     @State private var description: String = ""
@@ -38,7 +38,7 @@ struct NewTaskView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    addNewTask()
+                    addTask()
                     dismiss()
                 } label: {
                     Label("Save", systemImage: "checkmark")
@@ -49,11 +49,12 @@ struct NewTaskView: View {
         }
     }
     
-    private func addNewTask() {
+    private func addTask() {
         let newTask = TodoTask(title: title, description: description.isEmpty ? "No Description" : description, priority: priority)
         
-        tasks.append(newTask)
+        todoTaskViewModel.addTask(newTask)
     }
+
     
     private var isValidForm: Bool {
         if title.isEmpty {
